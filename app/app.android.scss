@@ -1,0 +1,18 @@
+@import 'app-common';
+@import '~nativescript-theme-core/scss/platforms/index.android';
+
+// Place any CSS rules you want to apply only on Android here
+
+// Font classes
+
+.opensans-regular {
+    font-family: 'OpenSans-Regular';
+}
+
+.opensans-semi-bold {
+    font-family: 'OpenSans-SemiBold';
+}
+
+.lobster-regular {
+    font-family: 'Lobster-Regular';
+}

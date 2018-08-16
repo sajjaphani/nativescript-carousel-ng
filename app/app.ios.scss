@@ -1,0 +1,21 @@
+@import 'app-common';
+@import '~nativescript-theme-core/scss/platforms/index.ios';
+
+// Place any CSS rules you want to apply only on iOS here
+
+// Font classes
+
+.opensans-regular {
+    font-family: 'Open Sans';
+    font-weight: 400;
+}
+
+.opensans-semi-bold {
+    font-family: 'Open Sans';
+    font-weight: 600;
+}
+
+.lobster-regular {
+    font-family: 'Lobster';
+    font-weight: 400;
+}

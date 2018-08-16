@@ -1,0 +1,76 @@
+// Import the theme’s variables. If you’re using a color scheme
+// other than “light”, switch the path to the alternative scheme,
+// for example '~nativescript-theme-core/scss/dark'.
+@import '~nativescript-theme-core/scss/light';
+
+// Customize any of the theme’s variables here, for instance $btn-color: red;
+
+// Import the theme’s main ruleset.
+@import '~nativescript-theme-core/scss/index';
+
+// Place any CSS rules you want to apply on both iOS and Android here.
+// This is where the vast majority of your CSS code goes.
+
+// FontAwesome v4.x
+.fa {
+    font-family: "FontAwesome";
+}
+
+.welcome-page-background {
+    background: linear-gradient(180deg, #E87401, #D05427);
+}
+
+.caro-item-dot {
+    background: #FFFFFF;
+    border-radius: 6;
+    height: 12;
+    width: 12;
+}
+
+.caro-item-dot-selected {
+    opacity: .3;
+}
+
+.skip-intro {
+    width: 40%;
+    font-size: 18;
+    border-width: 6;
+    border-color:#FFC526;
+    background-color:#FFFFFF;
+    color:#0C7DA7;
+    border-radius: 4;
+    padding: 9 17;
+  }
+
+  .carousel-item-head {
+      color: #FFFFFF;
+      font-size: 36;
+      text-align: center;
+  }
+
+  .carousel-item-desc {
+      font-size: 15;
+      color: #FFFFFF;
+      text-align: center;          
+  }
+
+  .carousel-loading {
+    font-size: 20;
+    color: #FFFFFF;
+    text-align: center;    
+  }
+
+  .carousel-item-circle {
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+    clip-path: circle(80% at 50% 50%)
+  }
+
+  .carousel-item-icon {
+      font-size: 77; 
+      color: #0C7DA7;
+      text-align: center;
+      horizontal-align:center;
+      vertical-align: center;
+  }

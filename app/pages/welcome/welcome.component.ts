@@ -3,9 +3,15 @@ import { RouterExtensions } from "nativescript-angular/router";
 
 import { Page, ContentView } from "ui/page";
 import { SwipeGestureEventData } from "ui/gestures/gestures";
+import { GridLayout, GridUnitType, ItemSpec } from "ui/layouts/grid-layout";
+import { AnimationDefinition, Animation } from 'ui/animation';
+import { screen } from "platform";
 
+import * as app from "application";
 import * as fs from "file-system";
 import * as builder from "ui/builder";
+
+declare var android: any;
 
 @Component({
   selector: "welcome",
@@ -20,17 +26,27 @@ export class WelcomeComponent implements OnInit {
   private slideCount = 3;
   private slides: Array<any> = new Array(3);
 
-  @ViewChild('slideContent') slideElement: ElementRef;
+  private screenWidth;
 
+  private slidesView: GridLayout;
+
+  @ViewChild('slideContent') slideElement: ElementRef;
   private slideView: ContentView;
 
   constructor(
     private page: Page,
     private nav: RouterExtensions,
   ) {
+    this.screenWidth = screen.mainScreen.widthDIPs;
   }
 
   ngOnInit() {
+    if (app.android) {
+      const nextSlide = this.slidesView.getChildAt(this.currentSlideNum);
+      const activity = app.android.startActivity;
+      const win = activity.getWindow();
+      win.addFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
     this.page.actionBarHidden = true;
     this.page.cssClasses.add("welcome-page-background");
     this.page.backgroundSpanUnderStatusBar = true;
@@ -39,7 +55,17 @@ export class WelcomeComponent implements OnInit {
 
     this.loadSlides(this.slideFiles, this.slidesPath).then((slides: any) => {
       this.slides = slides;
-      this.slideView.content = this.slides[0];
+      var row = new ItemSpec(1, GridUnitType.STAR);
+      let gridLayout = new GridLayout();
+      slides.forEach((element, i) => {
+        GridLayout.setColumn(element, 0);
+        if (i > 0)
+          element.opacity = 0
+        gridLayout.addChild(element);
+      });
+      gridLayout.addRow(row);
+
+      this.slideView.content = (this.slidesView = gridLayout);
     });
   }
 
@@ -57,27 +83,63 @@ export class WelcomeComponent implements OnInit {
     });
   }
 
-  skipIntro() {
-    // this.nav.navigate(["/home"], { clearHistory: true });
-    this.nav.navigate(["/home"]);
-  }
-
   onSwipe(args: SwipeGestureEventData) {
+    let prevSlideNum = this.currentSlideNum;
     let count = this.slideCount;
     if (args.direction == 2) {
       this.currentSlideNum = (this.currentSlideNum + 1) % count;
     } else if (args.direction == 1) {
       this.currentSlideNum = (this.currentSlideNum - 1 + count) % count;
+    } else {
+      // We are interested in left and right directions
+      return;
     }
 
-    setTimeout(() => {
-      this.slideView.content = this.slides[this.currentSlideNum];
-    }, 100);
+    const currSlide = this.slidesView.getChildAt(prevSlideNum);
+    const nextSlide = this.slidesView.getChildAt(this.currentSlideNum);
+
+    this.animate(currSlide, nextSlide, args.direction);
+  }
+
+  animate(currSlide, nextSlide, direction) {
+    nextSlide.translateX = (direction == 2 ? this.screenWidth : -this.screenWidth);
+    nextSlide.opacity = 1;
+    var definitions = new Array<AnimationDefinition>();
+    var defn1: AnimationDefinition = {
+      target: currSlide,
+      translate: { x: (direction == 2 ? -this.screenWidth : this.screenWidth), y: 0 },
+      duration: 500
+    };
+    definitions.push({
+      target: currSlide,
+      translate: { x: (direction == 2 ? -this.screenWidth : this.screenWidth), y: 0 },
+      duration: 500
+    });
+
+    definitions.push({
+      target: nextSlide,
+      translate: { x: 0, y: 0 },
+      duration: 500
+    });
+
+    var animationSet = new Animation(definitions);
+
+    animationSet.play().then(() => {
+      // console.log("Animation finished");
+    })
+      .catch((e) => {
+        console.log(e.message);
+      });
   }
 
   itemSelected(item: number) {
 
     console.log(item)
+  }
+
+  skipIntro() {
+    // this.nav.navigate(["/home"], { clearHistory: true });
+    this.nav.navigate(["/home"]);
   }
 
   getSliderItemClass(item: number) {

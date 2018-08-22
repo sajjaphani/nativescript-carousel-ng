@@ -7,11 +7,8 @@ import { GridLayout, GridUnitType, ItemSpec } from "ui/layouts/grid-layout";
 import { AnimationDefinition, Animation } from 'ui/animation';
 import { screen } from "platform";
 
-import * as app from "application";
 import * as fs from "file-system";
 import * as builder from "ui/builder";
-
-declare var android: any;
 
 @Component({
   selector: "welcome",
@@ -24,7 +21,6 @@ export class WelcomeComponent implements OnInit {
 
   private currentSlideNum: number = 0;
   private slideCount = 3;
-  private slides: Array<any> = new Array(3);
 
   private screenWidth;
 
@@ -41,12 +37,6 @@ export class WelcomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (app.android) {
-      const nextSlide = this.slidesView.getChildAt(this.currentSlideNum);
-      const activity = app.android.startActivity;
-      const win = activity.getWindow();
-      win.addFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
     this.page.actionBarHidden = true;
     this.page.cssClasses.add("welcome-page-background");
     this.page.backgroundSpanUnderStatusBar = true;
@@ -54,7 +44,6 @@ export class WelcomeComponent implements OnInit {
     this.slideView = this.slideElement.nativeElement;
 
     this.loadSlides(this.slideFiles, this.slidesPath).then((slides: any) => {
-      this.slides = slides;
       var row = new ItemSpec(1, GridUnitType.STAR);
       let gridLayout = new GridLayout();
       slides.forEach((element, i) => {

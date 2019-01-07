@@ -94,11 +94,7 @@ export class WelcomeComponent implements OnInit {
     nextSlide.translateX = (direction == 2 ? this.screenWidth : -this.screenWidth);
     nextSlide.opacity = 1;
     var definitions = new Array<AnimationDefinition>();
-    var defn1: AnimationDefinition = {
-      target: currSlide,
-      translate: { x: (direction == 2 ? -this.screenWidth : this.screenWidth), y: 0 },
-      duration: 500
-    };
+    
     definitions.push({
       target: currSlide,
       translate: { x: (direction == 2 ? -this.screenWidth : this.screenWidth), y: 0 },
